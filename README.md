@@ -39,3 +39,11 @@ from `logo/hasm/` and `logo/hasm_markdown/` into its bundled frontend assets.
 ```powershell
 python -m pytest
 ```
+
+The command automatically creates an HTML report with each test case, status,
+duration, captured output, and failure details at `test-reports/report.html`.
+Install the development dependencies first:
+
+```powershell
+python -m pip install -e ".[dev]"
+```
