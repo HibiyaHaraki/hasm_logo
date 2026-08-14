@@ -1,11 +1,14 @@
 from pathlib import Path
 import py_compile
-import os
-import shutil
-import subprocess
-import sys
 
+import matplotlib
 import matplotlib.image as mpimg
+import pytest
+
+matplotlib.use("Agg")
+
+from scripts.generate_hasm_logo import generate_hasm_logo_variants
+from scripts.generate_hasm_markdown_logo import generate_hasm_markdown_logo_variants
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -30,50 +33,50 @@ def expected_outputs() -> list[Path]:
     ]
 
 
-def test_generator_scripts_compile() -> None:
-    for script_name in (
+@pytest.mark.parametrize(
+    "script_name",
+    (
         "scripts/hasm_logo.py",
         "scripts/generate_hasm_logo.py",
         "scripts/generate_hasm_markdown_logo.py",
-    ):
-        py_compile.compile(str(ROOT / script_name), doraise=True)
+    ),
+)
+def test_generator_script_compiles(script_name: str) -> None:
+    py_compile.compile(str(ROOT / script_name), doraise=True)
 
 
-def test_checked_in_logo_outputs_are_square() -> None:
-    output_paths = expected_outputs()
-    assert len(HASM_OUTPUT_NAMES) == len(MARKDOWN_OUTPUT_NAMES) == 4
-    assert len(output_paths) == 8
-    for output_path in output_paths:
-        assert output_path.is_file(), output_path
-        image = mpimg.imread(output_path)
-        assert image.shape[0] == image.shape[1], output_path
+@pytest.mark.parametrize("output_name", HASM_OUTPUT_NAMES + MARKDOWN_OUTPUT_NAMES)
+def test_checked_in_logo_output_is_square(output_name: str) -> None:
+    output_path = ROOT / "logo" / (
+        "hasm_markdown" if output_name.startswith("hasm_markdown") else "hasm"
+    ) / output_name
+    assert output_path.is_file(), output_path
+    image = mpimg.imread(output_path)
+    assert image.shape[0] == image.shape[1], output_path
 
 
-def test_generators_output_all_expected_files_and_match_repository_bytes(tmp_path: Path) -> None:
-    temp_scripts = tmp_path / "scripts"
-    temp_scripts.mkdir()
-    for script_name in (
-        "hasm_logo.py",
-        "generate_hasm_logo.py",
-        "generate_hasm_markdown_logo.py",
-    ):
-        shutil.copy2(ROOT / "scripts" / script_name, temp_scripts / script_name)
+@pytest.mark.parametrize(
+    ("generate", "output_names", "relative_output_dir"),
+    (
+        (generate_hasm_logo_variants, HASM_OUTPUT_NAMES, Path("logo") / "hasm"),
+        (
+            generate_hasm_markdown_logo_variants,
+            MARKDOWN_OUTPUT_NAMES,
+            Path("logo") / "hasm_markdown",
+        ),
+    ),
+)
+def test_generator_outputs_match_repository_bytes(
+    tmp_path: Path,
+    generate,
+    output_names: tuple[str, ...],
+    relative_output_dir: Path,
+) -> None:
+    output_dir = tmp_path / relative_output_dir
+    generate(output_dir)
 
-    environment = os.environ.copy()
-    environment["MPLBACKEND"] = "Agg"
-    for script_name in (
-        "generate_hasm_logo.py",
-        "generate_hasm_markdown_logo.py",
-    ):
-        subprocess.run(
-            [sys.executable, str(temp_scripts / script_name)],
-            check=True,
-            env=environment,
-            capture_output=True,
-            text=True,
-        )
-
-    for expected_output in expected_outputs():
-        generated_output = tmp_path / expected_output.relative_to(ROOT)
+    for output_name in output_names:
+        generated_output = output_dir / output_name
+        expected_output = ROOT / relative_output_dir / output_name
         assert generated_output.is_file(), expected_output
         assert generated_output.read_bytes() == expected_output.read_bytes(), expected_output

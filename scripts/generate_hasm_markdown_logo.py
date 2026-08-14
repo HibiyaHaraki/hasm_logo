@@ -4,11 +4,14 @@ import matplotlib.pyplot as plt
 from matplotlib.collections import LineCollection
 from matplotlib.patches import Polygon
 
-from hasm_logo import build_logo_geometry, LINE_WIDTH, DPI, PAD_INCHES
+try:
+    from .hasm_logo import build_logo_geometry, LINE_WIDTH, DPI, PAD_INCHES
+except ImportError:
+    from hasm_logo import build_logo_geometry, LINE_WIDTH, DPI, PAD_INCHES
 
 OUTPUT_DIR = Path(__file__).resolve().parents[1] / "logo" / "hasm_markdown"
 
-def generate_hasm_markdown_logo_variants():
+def generate_hasm_markdown_logo_variants(output_dir: Path = OUTPUT_DIR):
     t, x, y, colors = build_logo_geometry()
 
     # --- 2. Calculate Pen Nib Matrix (2D Rotation) ---
@@ -73,7 +76,7 @@ def generate_hasm_markdown_logo_variants():
     ]
 
     print("Generating HASM Markdown Logo Variants...")
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True)
     for p in patterns:
         fig, ax = plt.subplots(figsize=(8, 8), facecolor=p["bg"])
         ax.set_facecolor(p["bg"])
@@ -107,7 +110,7 @@ def generate_hasm_markdown_logo_variants():
 
         plt.tight_layout()
         plt.savefig(
-            OUTPUT_DIR / p["filename"],
+            output_dir / p["filename"],
             dpi=DPI,
             transparent=True,  # すべての画像で背景を透明に指定
             bbox_inches='tight',
