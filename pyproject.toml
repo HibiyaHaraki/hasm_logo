@@ -7,6 +7,7 @@ name = "hasm-logo"
 version = "0.1.0"
 description = "Deterministic mathematical logo generators for HASM"
 readme = "README.md"
+license = {file = "LICENSE"}
 requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.7",
@@ -17,6 +18,10 @@ dependencies = [
 dev = [
     "pytest>=7.4",
 ]
+
+[project.urls]
+Repository = "https://github.com/HibiyaHaraki/hasm_logo"
+License = "https://github.com/HibiyaHaraki/hasm_logo/blob/master/LICENSE"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

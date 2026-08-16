@@ -2,6 +2,20 @@
 
 Deterministic mathematical logo generators for the HASM project, anchored to August 14, 2026.
 
+This public repository distributes the HASM logo assets and the scripts used
+to generate them. It is maintained as a project resource, not as a community
+contribution repository.
+
+## License and usage
+
+The code and generated assets in this repository are released under the
+[MIT License](LICENSE). The license permits reuse, including in proprietary
+projects, provided that the copyright and license notice are retained.
+
+Pull requests, issues, feature requests, documentation changes, and other
+community contributions are not accepted. See [CONTRIBUTING.md](CONTRIBUTING.md)
+for the repository policy.
+
 ## Repository layout
 
 - `scripts/` contains the logo generators.
