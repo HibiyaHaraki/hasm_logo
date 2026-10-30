@@ -9,3 +9,6 @@ __pycache__/
 htmlcov/
 test-reports/
 
+# Generated splash assets; keep generators and templates tracked.
+/logo/hasm/sprash_*
+/logo/hasm_markdown/sprash_*
