@@ -1,0 +1,4 @@
+[submodule "hasm_color_pattern"]
+	path = hasm_color_pattern
+	url = https://github.com/HibiyaHaraki/hasm_color_pattern.git
+	branch = master

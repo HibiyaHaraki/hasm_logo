@@ -12,6 +12,7 @@ requires-python = ">=3.10"
 dependencies = [
     "matplotlib>=3.7",
     "numpy>=1.24",
+    "Pillow>=10",
 ]
 
 [project.optional-dependencies]
@@ -22,6 +23,9 @@ dev = [
 [project.urls]
 Repository = "https://github.com/HibiyaHaraki/hasm_logo"
 License = "https://github.com/HibiyaHaraki/hasm_logo/blob/master/LICENSE"
+
+[tool.setuptools]
+packages = []
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
