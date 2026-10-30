@@ -24,5 +24,8 @@ dev = [
 Repository = "https://github.com/HibiyaHaraki/hasm_logo"
 License = "https://github.com/HibiyaHaraki/hasm_logo/blob/master/LICENSE"
 
+[tool.setuptools]
+packages = []
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
